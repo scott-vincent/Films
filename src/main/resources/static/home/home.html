@@ -5,7 +5,7 @@
     </div>
 
     <div class="text">
-        This is the home page. There are {{films.length}} films to choose from. Please select one from the list:
+        This is the home page. There are {{films.length}} films to choose from. Please click the <b>x</b> to select one.
     </div>
     
     <div class="film-list">
@@ -49,10 +49,35 @@
         </div>
     </div>
         
-    <div class="film-selection">
-        <b>Selected: </b>{{selected.title}}
+    <div class="delete-line">
+        <div class="line-item">
+            Selected: <b>{{selected.title}}</b>
+        </div>
+	    <button class="line-item" ng-hide="selected.id == undefined" ng-click="doDelete()">DELETE</button>
+	    <div class="line-item film-error">{{deleteError}}</div>
     </div>
 
-    <button class="filler" ng-click="doDelete()">DELETE</button>
+    <div class="add-text">
+        Add a New Film
+    </div>
+    
+    <div class="add-line">
+        <div class="line-item">
+            <label>
+               Title:
+               <input class="input-title" type="text" ng-model="added.title">
+            </label>
+        </div>
+
+        <div class="line-item">
+            <label>
+               Year:
+               <input class="input-year" type="text" ng-model="added.year">
+            </label>
+        </div>
+
+        <button class="line-item" ng-hide="added.title == ''" ng-click="doAdd()">ADD</button>
+        <div class="line-item film-error">{{addError}}</div>
+    </div>
 
 </div>

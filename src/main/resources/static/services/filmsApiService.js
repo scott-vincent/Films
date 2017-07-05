@@ -19,9 +19,9 @@ mainApp.factory("filmsApiService", ["$http", "$q",
 		        }, function(error) {
 					// REST call failed
 		        	var status = error.status;
-		        	var errMsg = error.data.message || "No error message";
+		        	var errMsg = error.data.message || "HTTP Status: " + error.status;
 		        	console.error(op + " failed - HTTP Status: " + status + ", Error: " + errMsg);
-		        	deferred.reject(status);
+		        	deferred.reject(errMsg);
 		        }
 		    );
 			
@@ -44,11 +44,10 @@ mainApp.factory("filmsApiService", ["$http", "$q",
 					console.log(op + " success - HTTP Status: " + response.status);
 					deferred.resolve(response.data);
 		        }, function(error) {
-					// REST call failed
 		        	var status = error.status;
-		        	var errMsg = error.data.message || "No error message";
+		        	var errMsg = error.data.message || "HTTP Status: " + error.status;
 		        	console.error(op + " failed - HTTP Status: " + status + ", Error: " + errMsg);
-		        	deferred.reject(status);
+		        	deferred.reject(errMsg);
 		        }
 		    );
 			
@@ -59,19 +58,27 @@ mainApp.factory("filmsApiService", ["$http", "$q",
 		 * Do a POST Rest call
 		 */
 		function doPost(url, body) {
-			//
-			// Write Me!
-			//
-			// This is similar to the above calls but you need to pass the body also.
-			//
-			// Use JSON.stringify to convert the body from an object into JSON.
-			//
-			// e.g.
-			//
-			// var body = { "title": "My Title", "year": "2017" };
-			// var bodyData = JSON.stringify(body);
-			//
-			// $http.post(url, bodyData).then(...
+			var deferred = $q.defer();
+
+			var op = "POST " + url;
+
+			// Convert object into JSON string
+			var bodyData = JSON.stringify(body);
+			
+			$http.post(url, bodyData).then(
+				function(response) {
+					// REST call was successful
+					console.log(op + " success - HTTP Status: " + response.status);
+					deferred.resolve(response.data);
+		        }, function(error) {
+		        	var status = error.status;
+		        	var errMsg = error.data.message || "HTTP Status: " + error.status;
+		        	console.error(op + " failed - HTTP Status: " + status + ", Error: " + errMsg);
+		        	deferred.reject(errMsg);
+		        }
+		    );
+			
+			return deferred.promise;
 		}
 		
 		return {
@@ -88,6 +95,10 @@ mainApp.factory("filmsApiService", ["$http", "$q",
 			
 			deleteFilm: function(id) {
 				return doDelete("/films/" + id);
+			},
+			
+			postFilm: function(film) {
+				return doPost("/films", film);
 			}
 			
 		};
